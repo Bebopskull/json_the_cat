@@ -1,30 +1,50 @@
 // const { get } = require('request');
 const request = require('request');
-const input = process.argv.slice(2);
+const breed = require(`./index`);
 
-const askCat = () => {
-
-  let breed = input[0];
-
+const fetchBreedDescription = (breed, callback) => {
   let query = `https://api.thecatapi.com/v1/breeds/search?q=${breed}`;
-
-  request.get(query, (error, response, body ) => {  
-    // console.log(response)
-    let gato = JSON.parse(body)
+  request.get(query, (error, response, body ) => {
+    let data = JSON.parse(body)
     if (error){
-      // console.log(error)
+      callback(error);
       return;
     }
-    if(gato[0] == undefined){
-      console.log(`${breed} not found, please input an existing cat breed.`);
+    if(data[0] == undefined){
+      callback(null, `${breed} not found, please input an existing cat breed.`)
       return;
+    } else {
+      callback(null, data[0].description)
     }
-    console.log(breed);
-    console.log(gato[0].description);
-    
   });
-// console.log(breed);
 };
+module.exports = { fetchBreedDescription };
 
-askCat();
 
+
+
+// let  breed  = fetchBreedDescription.input;`
+
+// let askCat = (breed) => {
+  
+//   // let breed = breed;
+
+//   let query = `https://api.thecatapi.com/v1/breeds/search?q=${breed}`;
+
+//   request.get(query, (error, response, body ) => {  
+//    
+//     let gato = JSON.parse(body)
+//     if (error){
+//      
+//       return;
+//     }
+//     if(gato[0] == undefined){
+//       console.log(`${breed} not found, please input an existing cat breed.`);
+//       return;
+//     }
+//     console.log(breed);
+//     console.log(gato[0].description);
+    
+//   });
+// // console.log(breed);
+// };
